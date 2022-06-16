@@ -1,42 +1,45 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Todos extends Model {
+  class UserRole extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, SubTodo }) {
+    static associate(models) {
       // define association here
-      this.belongsTo(User, { foreignKey: "userId" });
-      //for Subtodos
-      this.hasMany(SubTodo, { foreignKey: "parentId" });
     }
   }
-  Todos.init(
+  UserRole.init(
     {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
       },
-      userId: {
+      GroupId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Groups",
+          key: "id",
+        },
+      },
+      UserId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "Users", // name of Target model
-          key: "id", // key in Target model that we're referencing
+          model: "Users",
+          key: "id",
         },
       },
-      name: DataTypes.STRING,
-      is_completed: DataTypes.BOOLEAN,
     },
     {
       sequelize,
-      modelName: "Todos",
+      modelName: "UserRole",
     }
   );
-  return Todos;
+  return UserRole;
 };
